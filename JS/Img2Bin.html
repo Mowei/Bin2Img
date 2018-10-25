@@ -1,0 +1,88 @@
+<input type='file' accept='image/*' onchange='openFile(event)'><br>
+<button onclick="readImg()">ReadFile</button>
+<img id='imageFile' style="height:0px; width=0px">
+
+<script>
+    function openFile(file) {
+        var input = file.target;
+
+        var reader = new FileReader();
+        reader.onload = function () {
+            var dataURL = reader.result;
+            var imageFile = document.getElementById('imageFile');
+            imageFile.src = dataURL;
+        };
+        reader.readAsDataURL(input.files[0]);
+    };
+
+    function readImg() {
+        var canvas = document.createElement("canvas");
+        canvas.getContext("2d").drawImage(document.getElementById('imageFile'), 0, 0);
+        downloadLink(arrayBufferToBase64(Img2bin(canvas)));
+    };
+
+    function downloadLink(base64Str) {
+        document.body.innerHTML += '<a href="data:application/octet-stream;base64,' + base64Str + '" download="filename">ClickMe</a>';
+    };
+    function arrayBufferToBase64(buffer) {
+        var binary = '';
+        var bytes = new Uint8Array(buffer);
+        var len = bytes.byteLength;
+        for (var i = 0; i < len; i++) {
+            binary += String.fromCharCode(bytes[i]);
+        }
+        return window.btoa(binary);
+    };
+
+    function Img2bin(canvas) {
+        var ctx = canvas.getContext("2d");
+        var offsetX = 0;
+        var offsetY = 0;
+        var fileNumBytesToRead = 3;
+        var byteArray = new ArrayBuffer(GetFileSize(canvas));
+        var dataView = new DataView(byteArray);
+
+        for (var i = 0; i < canvas.height; i++) {
+            for (var j = 0; j < canvas.width; j++) {
+                var color = ctx.getImageData(offsetX + j, offsetY + i, 1, 1).data;
+                var colorR = color[0];
+                var colorG = color[1];
+                var colorB = color[2];
+                try {
+                    dataView.setUint8(fileNumBytesToRead++, colorR);
+                    dataView.setUint8(fileNumBytesToRead++, colorG);
+                    dataView.setUint8(fileNumBytesToRead++, colorB);
+                }
+                catch (err) {
+                    break;
+                }
+            }
+        }
+        return byteArray;
+    };
+
+    function GetFileSize(canvas) {
+        var byteArray = new ArrayBuffer(4);
+        var dataView = new DataView(byteArray);
+        var ctx = canvas.getContext("2d");
+        var offsetX = 0;
+        var offsetY = 0;
+        var color = ctx.getImageData(offsetX, offsetY, 1, 1).data;
+        dataView.setUint8(0, color[0]);
+        dataView.setUint8(1, color[1]);
+        dataView.setUint8(2, color[2]);
+        dataView.setUint8(3, ctx.getImageData(offsetX + 1, offsetY, 1, 1).data[0]);
+
+        return BytesToInt32(byteArray);
+    };
+
+    function BytesToInt32(buffer) {
+        var bytes = new Uint8Array(buffer, 0, 4);
+        var result =
+            (bytes[3] << 24) |
+            (bytes[2] << 16) |
+            (bytes[1] << 8) |
+            (bytes[0]);
+        return result;
+    };
+</script>

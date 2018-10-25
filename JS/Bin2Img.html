@@ -1,0 +1,84 @@
+<style>
+    img {
+        margin: 10px;
+    }
+</style>
+<input type="file" onchange='openFile(event)'><br>
+<div id="canvas-placement"></div>
+<script>
+    function openFile(file) {
+        var input = file.target;
+        var fileReader = new FileReader();
+        fileReader.onloadend = function (e) {
+            var arrayBuffer = e.target.result;
+            ByteArrayToBitmap(arrayBuffer);
+        };
+        fileReader.readAsArrayBuffer(input.files[0]);
+    };
+
+    function ByteArrayToBitmap(buffer) {
+        var oldByteArray = new Uint8Array(buffer);
+        var byteArray = concatTypedArrays(Int32ToBytes(oldByteArray.length), oldByteArray);
+        var fileNumBytesRead = byteArray.length;
+        var fileNumBytesToRead = 0;
+        var part = 0;
+
+        while (fileNumBytesToRead < fileNumBytesRead) {
+            //Pic Part
+            var canvas = document.createElement("canvas");
+            canvas.width = 1600;
+            canvas.height = 800;
+            var ctx = canvas.getContext("2d");
+            var Image = ctx.createImageData(canvas.width, canvas.height);
+            var ImageData = Image.data;
+            var ImageLength = ImageData.length;
+
+            for (var i = 0; i < ImageLength; i++) {
+                //1px
+                if (fileNumBytesToRead < fileNumBytesRead) {
+                    if ((i + 1) % 4 == 0) {
+                        ImageData[i] = 255;
+                    } else {
+                        ImageData[i] = byteArray[fileNumBytesToRead];
+                        fileNumBytesToRead++;
+                    }
+                }
+
+                //No Data
+                if (fileNumBytesToRead >= fileNumBytesRead) {
+                    break;
+                }
+            }
+            ctx.putImageData(Image, 0, 0, 0, 0, 1600, 800);
+            var Canvasimage = document.createElement('img');
+            Canvasimage.src = canvas.toDataURL("image/png");
+            var canvasPlacement = document.getElementById('canvas-placement');
+            canvasPlacement.append(Canvasimage);
+            var br = document.createElement("br");
+            canvasPlacement.appendChild(br);
+            part++;
+        }
+    };
+
+    function concatTypedArrays(a, b) {
+        var allLength = a.length + b.length;
+        var fixlength = allLength % 3;
+        if (fixlength != 0) {
+            allLength += 3 - fixlength;
+        }
+        var c = new (a.constructor)(allLength);
+        c.set(a, 0);
+        c.set(b, a.length);
+        return c;
+    };
+
+    function Int32ToBytes(num) {
+        arr = new Uint8Array([
+            (num & 0x000000ff),
+            (num & 0x0000ff00) >> 8,
+            (num & 0x00ff0000) >> 16,
+            (num & 0xff000000) >> 24
+        ]);
+        return arr;
+    };
+</script>

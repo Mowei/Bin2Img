@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2047
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bin2Img", "Bin2Img\Bin2Img.csproj", "{392E0ECC-673E-4F39-9F13-F71CA7176CF1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Img2Bin", "Img2Bin\Img2Bin.csproj", "{57635F21-3DA3-4304-845E-99AC79BB8688}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{392E0ECC-673E-4F39-9F13-F71CA7176CF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{392E0ECC-673E-4F39-9F13-F71CA7176CF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{392E0ECC-673E-4F39-9F13-F71CA7176CF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{392E0ECC-673E-4F39-9F13-F71CA7176CF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57635F21-3DA3-4304-845E-99AC79BB8688}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57635F21-3DA3-4304-845E-99AC79BB8688}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57635F21-3DA3-4304-845E-99AC79BB8688}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57635F21-3DA3-4304-845E-99AC79BB8688}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8F7FD367-C398-4AAA-BFBC-C2BD0CDBCB92}
+	EndGlobalSection
+EndGlobal
